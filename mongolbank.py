@@ -75,7 +75,7 @@ def get_data():
 		parser = MB_FX_TableParser()
 		
 		parser.reset()
-		parser.feed(fx_table)
+		parser.feed(html_text)
 		parser.close()
 
 		return parser.datas
