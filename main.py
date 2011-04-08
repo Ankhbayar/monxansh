@@ -16,7 +16,7 @@
 #
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp import util
-from mongolbank import get_data
+from mongolbank import get_data, CURRENCY_RATE_URL
 from google.appengine.ext.webapp import template
 import simplejson as json
 import traceback
@@ -26,18 +26,20 @@ class HanshHandler(webapp.RequestHandler):
 	def get(self):
 		try:
 			hansh_list  = get_data()
-			filter_currency = self.request.get('currency', False)
-			if filter_currency:
-				tmp_list = []
-				filter_currency = filter_currency.split("|")
-				for row in hansh_list:
-					if row[0] in filter_currency:
-						tmp_list.append(row)
-				hansh_list = tmp_list
-
-			self.response.out.write(json.dumps(hansh_list))
 		except:
-			self.response.out.write(traceback.format_exc())
+			hansh_list = []
+		filter_currency = self.request.get('currency', False)
+		if filter_currency:
+			tmp_list = []
+			filter_currency = filter_currency.split("|")
+			for row in hansh_list:
+				if row.get("code", False) in filter_currency:
+					tmp_list.append(row)
+			hansh_list = tmp_list
+	
+		self.response.out.write(json.dumps(hansh_list))
+	
+		self.response.out.write(traceback.format_exc())
 		#self.response.out.write('Hello world!')
 
 		#
@@ -67,22 +69,21 @@ class IndexHandler(BaseRequestHandler):
 
 class HanshHTMLHandler(BaseRequestHandler):
 	def get(self):
-		try:
-			hansh_list = get_data()
-			filter_currency = self.request.get('currency', False)
-			if filter_currency:
-				tmp_list = []
-				filter_currency = filter_currency.split("|")
-				for row in hansh_list:
-					if row[0] in filter_currency:
-						tmp_list.append(row)
-				hansh_list = tmp_list
 
-			# print hansh_list
-			self.generate("hansh.html", locals() )
+		try:
+			hansh_list  = get_data()
 		except:
-			self.response.out.write(traceback.format_exc())
-		#self.response.out.write('Hello world!')
+			hansh_list = []
+		filter_currency = self.request.get('currency', False)
+		if filter_currency:
+			tmp_list = []
+			filter_currency = filter_currency.split("|")
+			for row in hansh_list:
+				if row.get("code", False) in filter_currency:
+					tmp_list.append(row)
+			hansh_list = tmp_list
+		source_link = CURRENCY_RATE_URL
+		self.generate("hansh.html", locals() )
 
 def main():
 	application = webapp.WSGIApplication([
