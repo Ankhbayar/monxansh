@@ -3,14 +3,21 @@ version: 1
 runtime: python
 api_version: 1
 
+builtins:
+- datastore_admin: on
+- remote_api: on
+
+
 handlers:
 - url: /img
   static_dir: media
+  expiration: '0'
   
 - url: /favicon\.ico
   static_files: media/favicon.ico
+  expiration: '0'
   upload: media/favicon\.ico
-
-
+  
 - url: .*
   script: main.py
+
