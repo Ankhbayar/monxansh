@@ -38,12 +38,7 @@ class HanshHandler(webapp.RequestHandler):
 			hansh_list = tmp_list
 	
 		self.response.out.write(json.dumps(hansh_list))
-	
-		self.response.out.write(traceback.format_exc())
-		#self.response.out.write('Hello world!')
 
-		#
-		
 class BaseRequestHandler(webapp.RequestHandler):
 	"""Supplies a common template generation function.
 
