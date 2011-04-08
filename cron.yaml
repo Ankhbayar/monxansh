@@ -1,0 +1,5 @@
+cron:
+- url: /update.html
+  description: Update from MB DB
+  schedule: every 1 hours from 16:00 to 22:00
+
