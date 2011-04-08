@@ -7,10 +7,8 @@ __author__ = 'L.Ankhbayar'
 
 
 from sgmllib import SGMLParser
-from google.appengine.ext.webapp import template
-from google.appengine.api import urlfetch
 
-CURRENCY_RATE_URL = "http://www.mongolbank.mn/web/guest/137"
+CURRENCY_RATE_URL = "http://www.mongolbank.mn/listexchange.aspx?did=2"
 
 class MB_FX_TableParser(SGMLParser):
 	datas = None
@@ -18,26 +16,62 @@ class MB_FX_TableParser(SGMLParser):
 	def reset(self):
 		SGMLParser.reset(self)
 		self.datas = []
-		self.current_row = []
-	def start_tr(self, attrs):
-		self.current_row  = []
-		self.datas.append(self.current_row)
+		self.current_row = {}
+		self.start_fx_ul = False
+		self.dic_key = None
+	def start_ul(self, attrs):
+		if len(attrs) == 0:
+			self.start_fx_ul = True
+	def start_li(self, attrs):
+		# print " start_li,  ", self.start_fx_ul
+		if self.start_fx_ul:
+			# New UL
+			self.current_row = {}
+			self.dic_key = None
+			self.datas.append(self.current_row)
+	
+	def start_span(self, attrs):
+		if self.start_fx_ul:
+			# print "Span, " ,  attrs
+			if attrs:
+				# TODO: Fix hard code
+				code = attrs[0][1][-3:]
+				self.current_row['code'] = code
+			# print "set_rate"
+			self.dic_key = "rate"
+	
+	def handle_starttag(self, tag, method, attrs):
+		if tag == "ul" and self.start_fx_ul == False:
+			method(attrs)
+		elif tag in ["li","td", "span"] and self.start_fx_ul is True:
+			method(attrs)
+		else:
+			self.dic_key = None
+		# print "tags", tags,  attrs #,  method, attrs
+	def start_td(self, attrs):
+		if self.start_fx_ul and attrs == [('align', 'left')] :
+			print "set_name", attrs
+			self.dic_key = "name"
+	
 	def handle_data(self, text):
-		self.current_row.append(text)
+		# print "text", text
+		if self.start_fx_ul and self.dic_key is not None:
+			self.current_row[self.dic_key] = text
+			self.dic_key = None
 
-
+def open_url_data(url):
+	from google.appengine.api import urlfetch
+	#result = urlfetch.fetch(CURRENCY_RATE_URL, deadline = 30 )
+	result = urlfetch.fetch(CURRENCY_RATE_URL)
+	return result.content
+	
+	
 def get_data():
-
-	result = urlfetch.fetch(CURRENCY_RATE_URL )
-	html_text = result.content
-	# result.close()
-
-	if result.status_code == 200:
-		# Аштайхан болгох
-		fx_table_start = html_text.index("""<div id="tab_style">""") - 20
-		fx_table_end = html_text.index("""</div>""", fx_table_start)
-		fx_table = html_text[fx_table_start:fx_table_end]
-		#print "fx_table", fx_table
+	
+	
+	html_text = open_url_data(CURRENCY_RATE_URL)
+	
+	if html_text is not None:
 		parser = MB_FX_TableParser()
 		
 		parser.reset()
@@ -48,4 +82,17 @@ def get_data():
 	else:
 		return "error mb connect error"
 
-	
+#print get_data()
+
+#text = open("text.html", "r")
+#parser = MB_FX_TableParser()
+
+#parser.reset()
+#parser.feed(text.read() )
+
+#print parser.datas
+
+#text.close()
+#parser.close()
+
+
