@@ -23,7 +23,6 @@ class MB_FX_TableParser(SGMLParser):
 		if len(attrs) == 0:
 			self.start_fx_ul = True
 	def start_li(self, attrs):
-		# print " start_li,  ", self.start_fx_ul
 		if self.start_fx_ul:
 			# New UL
 			self.current_row = {}
@@ -32,12 +31,10 @@ class MB_FX_TableParser(SGMLParser):
 	
 	def start_span(self, attrs):
 		if self.start_fx_ul:
-			# print "Span, " ,  attrs
 			if attrs:
 				# TODO: Fix hard code
 				code = attrs[0][1][-3:]
 				self.current_row['code'] = code
-			# print "set_rate"
 			self.dic_key = "rate"
 	
 	def handle_starttag(self, tag, method, attrs):
@@ -47,14 +44,11 @@ class MB_FX_TableParser(SGMLParser):
 			method(attrs)
 		else:
 			self.dic_key = None
-		# print "tags", tags,  attrs #,  method, attrs
 	def start_td(self, attrs):
 		if self.start_fx_ul and attrs == [('align', 'left')] :
-			print "set_name", attrs
 			self.dic_key = "name"
 	
 	def handle_data(self, text):
-		# print "text", text
 		if self.start_fx_ul and self.dic_key is not None:
 			self.current_row[self.dic_key] = text
 			self.dic_key = None
@@ -81,18 +75,4 @@ def get_data():
 		return parser.datas
 	else:
 		return "error mb connect error"
-
-#print get_data()
-
-#text = open("text.html", "r")
-#parser = MB_FX_TableParser()
-
-#parser.reset()
-#parser.feed(text.read() )
-
-#print parser.datas
-
-#text.close()
-#parser.close()
-
 
