@@ -55,7 +55,8 @@ class MB_FX_TableParser(SGMLParser):
 
 def open_url_data(url):
 	from google.appengine.api import urlfetch
-	result = urlfetch.fetch(CURRENCY_RATE_URL, deadline = 30 )
+	result = urlfetch.fetch(CURRENCY_RATE_URL, deadline = 30, 
+							headers = { 'Cache-Control': 'no-cache,max-age=0', 'Pragma': 'no-cache' } )
 	#result = urlfetch.fetch(CURRENCY_RATE_URL, )
 	return result.content
 	

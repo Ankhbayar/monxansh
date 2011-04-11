@@ -52,7 +52,11 @@ class Xansh(db.Model):
 	def get_all_to_dic():
 		big_dic = []
 		for xansh in Xansh.all().order("erembe"):
-			row = {"code": xansh.code, "name": xansh.name, "rate": xansh.rate, "last_date" : xansh.updated.strftime("%Y-%m-%d %H:%M:%S") }
+			row = {	"code": xansh.code, 
+					"name": xansh.name, 
+					"rate": xansh.rate, 
+					"last_date" : xansh.updated.strftime("%Y-%m-%d %H:%M:%S") 
+					}
 			big_dic.append(row)
 		return big_dic
 
