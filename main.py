@@ -128,7 +128,13 @@ class HanshHTMLHandler(BaseRequestHandler):
 					tmp_list.append(row)
 			hansh_list = tmp_list
 		source_link = CURRENCY_RATE_URL
-		self.generate("hansh.html", locals() )
+		self.generate("hansh.html", {
+			'hansh_list': hansh_list,
+			'source_link':source_link,
+			'currency_title': self.request.get('currency_title', u"Валют"),
+			'currency_rate_title': self.request.get('currency_rate_title', u"Албан ханш"),
+			'source': self.request.get('source', u"Эх сурвалж"),
+			} )
 
 class UpdateRateHandler(webapp.RequestHandler):
 	def get(self):
@@ -149,7 +155,7 @@ class UpdateRateHandler(webapp.RequestHandler):
 			self.response.out.write(u"Амжилттай<br/>" )
 			# Clear catch
 			memcache.delete(catch_key)
-			self.response.out.write(u"Cach cleared " )
+			self.response.out.write(u"Cache cleared " )
 		except:
 			self.response.out.write(u"Татаж чадсангүй<br/>")
 			self.response.out.write(traceback.format_exc())
