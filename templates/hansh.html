@@ -27,8 +27,8 @@ a:hover{ color:#000000; text-decoration:none; }
 <body>
 <table border=0 cellpadding=3 cellspacing=1 width=100% bgcolor=white> 
 <tr bgcolor="#ededed">
-	<td><strong>{{currency_title}}</strong></td>
-	<td><strong>{{currency_rate_title}}</strong></td>
+	<td><strong>{{currency_title|escape}}</strong></td>
+	<td><strong>{{currency_rate_title|escape}}</strong></td>
 </tr>
 {% for row in hansh_list %}
 <tr bgcolor="#ffffff" >
@@ -40,7 +40,7 @@ a:hover{ color:#000000; text-decoration:none; }
 {% endfor %}
 </table>
 <table border="0" cellpadding="0" cellspacing="0" width="100%">
-<tbody><tr><td>{{source}} :</td><td align="right"><a href="{{source_link}}" target="_blank"><strong>» Монгол банк</strong></a></td></tr></tbody></table>
+<tbody><tr><td>{{source|escape}} :</td><td align="right"><a href="{{source_link}}" target="_blank"><strong>» Монгол банк</strong></a></td></tr></tbody></table>
 </body>
 </html>
 
