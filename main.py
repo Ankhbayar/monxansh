@@ -181,23 +181,24 @@ class SitemapXML(webapp.RequestHandler):
 	def get(self):
 		self.response.headers['Content-Type'] = 'text/xml'
 		self.response.out.write(u"""<?xml version="1.0" encoding="UTF-8"?>
-   <sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-   <sitemap>
+   <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+   <url>
       <loc>http://monxansh.appspot.com/</loc>
-   </sitemap>
-   <sitemap>
+   </url>
+   <url>
       <loc>http://monxansh.appspot.com/xansh.html</loc>
       <changefreq>always</changefreq>
-   </sitemap>
-   <sitemap>
+   </url>
+   <url>
       <loc>http://monxansh.appspot.com/xansh.json</loc>
       <changefreq>always</changefreq>
-   </sitemap>
-   <sitemap>
+   </url>
+   <url>
       <loc>http://monxansh.appspot.com/xansh.html?currency=USD|EUR|JPY|GBP|RUB|CNY|KRW</loc>
       <changefreq>always</changefreq>
-   </sitemap>
-</sitemapindex>""")
+   </url>
+</urlset>
+""")
 
 		
 def conv_unicode(var):
