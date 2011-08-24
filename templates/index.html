@@ -38,20 +38,36 @@
 <style>
 	.plus_one_div{
 		float:left; 
-		padding-top:8px;
 	}
 	.facebook_div{
-		float:right;
+		display:block;
+		width: 300px;
+		float:left;
+		margin: 0px auto;
 		
+	}
+	.twitter_div{
+		float:left;
+	}
+	.clear{
+		clear:both;
 	}
 </style>
 </head>
 <body>
-<div class="plus_one_div"><g:plusone href="http://monxansh.appspot.com"></g:plusone></div>
-<div class="facebook_div">
-<div id="fb-root"></div><script src="http://connect.facebook.net/en_US/all.js#appId=225646060820419&amp;xfbml=1"></script><fb:like href="http://monxansh.appspot.com/" send="true" width="450" show_faces="true" action="like" font=""></fb:like>
-</div>
 <h1>Монгол банкны ханш татагч</h1>
+<div class="plus_one_div">
+	<g:plusone href="http://monxansh.appspot.com"  size="tall" width="300" annotation="inline"></g:plusone>
+</div>
+<div class="facebook_div">
+	<div id="fb-root"></div>
+	<script src="http://connect.facebook.net/en_US/all.js#appId=225646060820419&amp;xfbml=1"></script>
+	<fb:like href="http://monxansh.appspot.com/" send="true" width="300" show_faces="true" action="like" font=""></fb:like>
+</div>
+<div class="twitter_div">
+	<a href="http://twitter.com/share" class="twitter-share-button" data-url="http://monxansh.appspot.com" data-count="horizontal">Tweet</a><script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script>
+</div>
+<div class="clear"></div>
 	<h2>JSON format for jQuery</h2>
 	<pre>jQuery.ajax({
 		url : 'http://monxansh.appspot.com/xansh.json?currency=USD|EUR', 
