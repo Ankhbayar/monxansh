@@ -2,6 +2,12 @@
 """Монгол банкы ханш татагч
 	author : @ankhaatk
 """
+import os
+os.environ['DJANGO_SETTINGS_MODULE'] = 'settings'
+
+#from google.appengine.dist import use_library
+#use_library('django', '1.3')
+
 
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp import util
@@ -9,6 +15,8 @@ from mongolbank import get_data, CURRENCY_RATE_URL
 from google.appengine.ext.webapp import template
 from google.appengine.api import memcache
 from google.appengine.ext import db
+
+from xml.dom.minidom import Document
 
 import simplejson as json
 import traceback
@@ -18,6 +26,7 @@ _DEBUG = False
 # For local catch
 local_catch_time = 60 # 1 цаг
 catch_key = "xansh_list"
+
 
 
 class Xansh(db.Model):
@@ -138,6 +147,7 @@ class HanshHTMLHandler(BaseRequestHandler):
 
 class UpdateRateHandler(webapp.RequestHandler):
 	def get(self):
+		self.response.headers['Content-Type'] = 'text/plain'
 		try:
 			count = 0
 			hansh_list = get_data()
@@ -149,18 +159,47 @@ class UpdateRateHandler(webapp.RequestHandler):
 									name = conv_unicode(row.get("name") ), 
 									rate = row.get("rate"), 
 									erembe = count)
-					self.response.out.write(u"%d.%s Ханш хадгалав<br/>" %(count, code) )
+					self.response.out.write(u"%d.%s Ханш хадгалав\n" %(count, code) )
 			
 			
-			self.response.out.write(u"Амжилттай<br/>" )
+			self.response.out.write(u"Амжилттай\n" )
 			# Clear catch
 			memcache.delete(catch_key)
 			self.response.out.write(u"Cache cleared " )
 		except:
-			self.response.out.write(u"Татаж чадсангүй<br/>")
+			self.response.out.write(u"Татаж чадсангүй\n")
 			self.response.out.write(traceback.format_exc())
 
+class Robots(webapp.RequestHandler):
+	def get(self):
+		self.response.headers['Content-Type'] = 'text/plain'
+		self.response.out.write(u"User-agent: *\n")
+		self.response.out.write(u"Allow:/")
 
+
+class SitemapXML(webapp.RequestHandler):
+	def get(self):
+		self.response.headers['Content-Type'] = 'text/xml'
+		self.response.out.write(u"""<?xml version="1.0" encoding="UTF-8"?>
+   <sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+   <sitemap>
+      <loc>http://monxansh.appspot.com/</loc>
+   </sitemap>
+   <sitemap>
+      <loc>http://monxansh.appspot.com/xansh.html</loc>
+      <changefreq>always</changefreq>
+   </sitemap>
+   <sitemap>
+      <loc>http://monxansh.appspot.com/xansh.json</loc>
+      <changefreq>always</changefreq>
+   </sitemap>
+   <sitemap>
+      <loc>http://monxansh.appspot.com/xansh.html?currency=USD|EUR|JPY|GBP|RUB|CNY|KRW</loc>
+      <changefreq>always</changefreq>
+   </sitemap>
+</sitemapindex>""")
+
+		
 def conv_unicode(var):
 	if isinstance(var, str):
 		var = unicode(var, 'utf-8')
@@ -174,6 +213,8 @@ def main():
 		("/xansh.json", HanshHandler),
 		("/xansh.html", HanshHTMLHandler),
 		("/update.html", UpdateRateHandler),
+		("/robots.txt", Robots),
+		("/sitemap.xml", SitemapXML),
 		], debug=True)
 	util.run_wsgi_app(application)
 
