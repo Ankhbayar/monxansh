@@ -99,6 +99,8 @@ class HanshHandler(webapp.RequestHandler):
 			self.response.out.write(traceback.format_exc())
 			hansh_list = []
 		filter_currency = self.request.get('currency', False)
+		# Thanks. http://stackoverflow.com/questions/477816/the-right-json-content-type
+		self.response.headers['Content-Type'] = 'application/json;charset=utf-8'
 		if filter_currency:
 			tmp_list = []
 			filter_currency = filter_currency.split("|")
@@ -147,7 +149,8 @@ class HanshHTMLHandler(BaseRequestHandler):
 
 class UpdateRateHandler(webapp.RequestHandler):
 	def get(self):
-		self.response.headers['Content-Type'] = 'text/plain'
+		self.response.headers['Content-Type'] = 'text/plain;charset=utf-8'
+		
 		try:
 			count = 0
 			hansh_list = get_data()
