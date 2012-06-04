@@ -18,7 +18,7 @@ from google.appengine.ext import db
 
 from xml.dom.minidom import Document
 
-import simplejson as json
+import json
 import traceback
 import os
 _DEBUG = False
@@ -116,7 +116,7 @@ class IndexHandler(BaseRequestHandler):
         return self.get()
     def get(self):
         try:
-            self.generate("../templates/index.html" )
+            self.generate("index.html" )
         except:
             self.response.out.write(traceback.format_exc())
 
