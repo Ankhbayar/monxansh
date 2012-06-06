@@ -2,8 +2,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>Монгол банк албан ханш</title>
-<link rel="Shortcut Icon" href="favicon.ico" /> 
-
+<link rel="Shortcut Icon" href="favicon.ico" />
 <style type="text/css">
 body{
 margin:0px;
@@ -29,18 +28,48 @@ a:hover{ color:#000000; text-decoration:none; }
 <tr bgcolor="#ededed">
 	<td><strong>{{currency_title|escape}}</strong></td>
 	<td><strong>{{currency_rate_title|escape}}</strong></td>
-</tr>
+</tr><tbody>
 {% for row in hansh_list %}
 <tr bgcolor="#ffffff" >
-{% comment %}
-	<td align=center width=50%> <img src="http://www.mongolbank.mn/img/{{row.0}}.png" /> </td>{% endcomment %}
 	<td alt="{{row.name}}" id="{{row.code}}">{{row.code}}</td>
 	<td align=right width=50%>{{row.rate}}</td>
 </tr>
 {% endfor %}
-</table>
-<table border="0" cellpadding="0" cellspacing="0" width="100%">
-<tbody><tr><td>{{source|escape}} :</td><td align="right"><a href="{{source_link}}" target="_blank"><strong>» Монгол банк</strong></a></td></tr></tbody></table>
+</tbody><tfoot><tr><td>{{source|escape}} :</td><td align="right"><a href="{{source_link}}" target="_blank"><strong>» Монгол банк</strong></a></td></tr>{% if use_conv_tool %}
+	<tr>
+		<td colspan="2">
+			<label for="mnt" style="width:8%; display:inline-block;">Төгрөг </label> <input type="text" id="mnt" style="width:90%;" /> <br />
+			<select id="rate" style="width:8%;">{% for row in hansh_list %}
+				<option value="{{row.rate_float}}"><img src="/img/{{row.code}}.png" /> {{row.code}} </option>
+			{% endfor %}</select> 
+			</label><input type="text" id="currency" style="width:90%;"/> </br>
+			
+		</td>
+	</tr>
+{% endif %}</tfoot></table>
+{% if use_conv_tool %}
+ <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js">
+ </script>
+ <script type="text/javascript">
+ $(function(){
+ 	$("#mnt").keyup(function(){
+ 		var rate = parseFloat( $('select#rate option:selected').val() ) ;
+ 		var mnt_val = parseFloat( $(this).val() ) ;
+ 		$("#currency").val(parseFloat(mnt_val / rate ).toFixed(2) );
+ 	});
+	$("#currency").keyup(function(){
+ 		var rate = parseFloat( $('select#rate option:selected').val() ) ;
+ 		var currency_val = parseFloat( $(this).val() ) ;
+ 		$("#mnt").val( parseFloat(rate * currency_val).toFixed(2) )
+ 	});
+ 	$("#rate").change(function(){
+ 		$("#mnt").keyup(); // ????
+ 		// $("#currency").keyup(); //????
+ 		
+ 	})
+ })
+ </script>
+{% endif %}
 </body>
 </html>
 

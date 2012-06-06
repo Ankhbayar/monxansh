@@ -24,8 +24,9 @@ import os
 _DEBUG = False
 
 # For local catch
-local_catch_time = 60 # 1 цаг
-catch_key = "xansh_list"
+local_catch_time = 3600 # 1 цаг
+catch_key = "xansh_list_no_order"
+catch_key_ordered = "xansh_list_order"
 
 
 
@@ -36,6 +37,7 @@ class Xansh(db.Model):
     name = db.StringProperty(verbose_name = u"Нэр")
     # Тооцоолол хийхгүй
     rate = db.StringProperty(verbose_name = u"Ханш",required=True)
+    rate_float = db.FloatProperty(verbose_name = u"Ханш",required=False)
     
     # Сүүлд хадгалсан огноо
     updated = db.DateTimeProperty(auto_now=True)
@@ -51,6 +53,13 @@ class Xansh(db.Model):
             xansh = Xansh(code = code, rate = rate, erembe = erembe)
         
         xansh.name = name
+        cleaned_rate = rate.replace("," , "").replace(" ", "")
+        try:
+            xansh.rate_float = float(cleaned_rate)
+        except:
+            # Алдаа их гардаг
+            print traceback.format_exc()
+            xansh.rate_float = 0
         xansh.rate = rate
         xansh.erembe = erembe
         
@@ -58,15 +67,40 @@ class Xansh(db.Model):
         return 
         
     @staticmethod   
-    def get_all_to_dic():
+    def get_all_to_dic_order():
+        big_dic = memcache.get(catch_key_ordered)
+        if big_dic is not None:
+            return big_dic
         big_dic = []
         for xansh in Xansh.all().order("erembe"):
             row = { "code": xansh.code, 
                     "name": xansh.name, 
                     "rate": xansh.rate, 
+                    "rate_float": xansh.rate_float, 
                     "last_date" : xansh.updated.strftime("%Y-%m-%d %H:%M:%S") 
                     }
             big_dic.append(row)
+        memcache.add(key = catch_key_ordered, 
+                value = big_dic,  
+                time=local_catch_time )
+
+        return big_dic
+    @staticmethod   
+    def get_all_to_dic():
+        big_dic = memcache.get(catch_key)
+        if big_dic is not None:
+            return big_dic
+        big_dic = {}
+        for xansh in Xansh.all().order("erembe"):
+            big_dic[xansh.code] = { "code": xansh.code, 
+                    "name": xansh.name, 
+                    "rate": xansh.rate, 
+                    "rate_float": xansh.rate_float, 
+                    "last_date" : xansh.updated.strftime("%Y-%m-%d %H:%M:%S") 
+                    }
+        memcache.add(key = catch_key, 
+                value = big_dic,  
+                time=local_catch_time )
         return big_dic
 
 
@@ -89,27 +123,33 @@ class BaseRequestHandler(webapp2.RequestHandler):
 
 class HanshHandler(webapp2.RequestHandler):
     def get(self):
-        try:
-            
-            hansh_list = memcache.get(catch_key)
-            if hansh_list is None:
-                hansh_list = Xansh.get_all_to_dic()
-                memcache.add(catch_key, hansh_list,  local_catch_time )
-        except:
-            self.response.out.write(traceback.format_exc())
-            hansh_list = []
         filter_currency = self.request.get('currency', False)
+        myorder = self.request.get('myorder', False)
+        
         # Thanks. http://stackoverflow.com/questions/477816/the-right-json-content-type
         self.response.headers['Content-Type'] = 'application/json;charset=utf-8'
+        ret_list = []
+
         if filter_currency:
-            tmp_list = []
             filter_currency = filter_currency.split("|")
+
+        if filter_currency and myorder:
+            hansh_list = Xansh.get_all_to_dic()
+            # Хэрэглэгч өөрийнхөө дараалалаар байрлуулах боломж
+            for code in filter_currency:
+                row = hansh_list.get(code)
+                if row:
+                    ret_list.append(row)
+        elif filter_currency:
+            hansh_list = Xansh.get_all_to_dic_order()
+
             for row in hansh_list:
                 if row.get("code", False) in filter_currency:
-                    tmp_list.append(row)
-            hansh_list = tmp_list
+                    ret_list.append(row)
+        else:
+            ret_list = Xansh.get_all_to_dic_order()
     
-        self.response.out.write(json.dumps(hansh_list))
+        self.response.out.write(json.dumps(ret_list))
 
 class IndexHandler(BaseRequestHandler):
     def post(self):
@@ -122,29 +162,38 @@ class IndexHandler(BaseRequestHandler):
 
 class HanshHTMLHandler(BaseRequestHandler):
     def get(self):
-        try:
-            hansh_list = memcache.get(catch_key)
-            if hansh_list is None:
-                hansh_list = Xansh.get_all_to_dic()
-                memcache.add(catch_key, hansh_list,  local_catch_time )
-        except:
-            hansh_list = []
-        
         filter_currency = self.request.get('currency', False)
+        myorder = self.request.get('myorder', False)
+        myorder = self.request.get('myorder', False)
+        ret_list = []
+
         if filter_currency:
-            tmp_list = []
             filter_currency = filter_currency.split("|")
+
+        if filter_currency and myorder:
+            hansh_list = Xansh.get_all_to_dic()
+            # Хэрэглэгч өөрийнхөө дараалалаар байрлуулах боломж
+            for code in filter_currency:
+                row = hansh_list.get(code)
+                if row:
+                    ret_list.append(row)
+        elif filter_currency:
+            hansh_list = Xansh.get_all_to_dic_order()
+
             for row in hansh_list:
                 if row.get("code", False) in filter_currency:
-                    tmp_list.append(row)
-            hansh_list = tmp_list
+                    ret_list.append(row)
+        else:
+            ret_list = Xansh.get_all_to_dic_order()
+
         source_link = CURRENCY_RATE_URL
         self.generate("hansh.html", {
-            'hansh_list': hansh_list,
+            'hansh_list': ret_list,
             'source_link':source_link,
             'currency_title': self.request.get('currency_title', u"Валют"),
             'currency_rate_title': self.request.get('currency_rate_title', u"Албан ханш"),
             'source': self.request.get('source', u"Эх сурвалж"),
+            'use_conv_tool': self.request.get('conv_tool', False),
             } )
 
 class UpdateRateHandler(webapp2.RequestHandler):
@@ -168,6 +217,7 @@ class UpdateRateHandler(webapp2.RequestHandler):
             self.response.out.write(u"Амжилттай\n" )
             # Clear catch
             memcache.delete(catch_key)
+            memcache.delete(catch_key_ordered)
             self.response.out.write(u"Cache cleared " )
         except:
             self.response.out.write(u"Татаж чадсангүй\n")
