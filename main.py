@@ -131,7 +131,7 @@ class HanshHandler(webapp2.RequestHandler):
         ret_list = []
 
         if filter_currency:
-            filter_currency = filter_currency.split("|")
+            filter_currency = filter_currency.upper().split("|")
 
         if filter_currency and myorder:
             hansh_list = Xansh.get_all_to_dic()
@@ -164,11 +164,10 @@ class HanshHTMLHandler(BaseRequestHandler):
     def get(self):
         filter_currency = self.request.get('currency', False)
         myorder = self.request.get('myorder', False)
-        myorder = self.request.get('myorder', False)
         ret_list = []
 
         if filter_currency:
-            filter_currency = filter_currency.split("|")
+            filter_currency = filter_currency.upper().split("|")
 
         if filter_currency and myorder:
             hansh_list = Xansh.get_all_to_dic()

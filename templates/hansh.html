@@ -38,11 +38,11 @@ a:hover{ color:#000000; text-decoration:none; }
 </tbody><tfoot><tr><td>{{source|escape}} :</td><td align="right"><a href="{{source_link}}" target="_blank"><strong>» Монгол банк</strong></a></td></tr>{% if use_conv_tool %}
 	<tr>
 		<td colspan="2">
-			<label for="mnt" style="width:8%; display:inline-block;">Төгрөг </label> <input type="text" id="mnt" style="width:90%;" /> <br />
-			<select id="rate" style="width:8%;">{% for row in hansh_list %}
+			<label for="mnt" style="width:15%; display:inline-block; padding-left: 10px;">Төгрөг </label> <input type="text" id="mnt" style="width:80%;" /> <br />
+			<select id="rate" style="width:15%; display:inline-block;  padding-left: 10px;">{% for row in hansh_list %}
 				<option value="{{row.rate_float}}"><img src="/img/{{row.code}}.png" /> {{row.code}} </option>
 			{% endfor %}</select> 
-			</label><input type="text" id="currency" style="width:90%;"/> </br>
+			</label><input type="text" id="currency" style="width:80%;"/> </br>
 			
 		</td>
 	</tr>
