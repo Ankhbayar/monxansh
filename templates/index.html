@@ -1,31 +1,177 @@
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta name="description" content="Монгол банкны албан ханш татагч. " /> 
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Ханш татагч</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Монгол банкны албан ханш татагч. " /> 
 
-<meta name="keywords" content="Ханш татагч, Ханш, Монголбанк, monxansh, monxansh.appspot.com" /> 
-<meta name="robots" content="follow" /> 
-<meta name="robots" content="index, follow" /> 
+    <meta name="keywords" content="Ханш татагч, Ханш, Монголбанк, monxansh, monxansh.appspot.com" /> 
+    <meta name="robots" content="follow" /> 
+    <meta name="robots" content="index, follow" /> 
 
-<meta name="author" content="ankhaatk" /> 
-<meta name="language" content="mn" /> 
+    <meta name="author" content="ankhaatk" /> 
+    <meta name="language" content="mn" /> 
 
 
-<title>Ханш татагч</title>
+    <!-- Le styles -->
+    <link href="http://twitter.github.com/bootstrap/assets/css/bootstrap.css" rel="stylesheet">
+    <link href="http://google-code-prettify.googlecode.com/svn/trunk/src/prettify.css" type="text/css" rel="stylesheet"/>
+    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
 
-<link rel="Shortcut Icon" href="favicon.ico" /> 
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="favicon.ico">
+  </head>
+<body onload="prettyPrint()">
+    <div class="container">
+      
+      <div class="row">
+        <div class="span12">
+          <h1>Монгол банкны ханш татагч</h1>
+          <hr />
+        </div>
+      </div>
+      <div class="row">
+        <div class="span4">
+          <div class="plus_one_div">
+            <g:plusone href="http://monxansh.appspot.com"  size="tall" width="300" annotation="inline"></g:plusone>
+          </div>
+        </div>
+        <div class="span4">
+           <div class="facebook_div">
+            <div id="fb-root"></div>
+                <fb:like href="http://monxansh.appspot.com/" send="true" width="300" show_faces="true" action="like" font=""></fb:like>
+            </div>
+       </div>
+        <div class="span4">
+          <div class="twitter_div">
+            <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://monxansh.appspot.com" data-count="horizontal">Tweet</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="span6">
+          <h3>JSON format for jQuery</h3>
+          <pre class"prettyprint lang-js">jQuery.ajax({
+  url : 'http://monxansh.appspot.com/xansh.json?currency=USD|EUR', 
+  data_type: 'json',
+  success : function(data) {
+    jQuery.each(data, function(row) {
+      // Format 
+      // row.code       - Код USD, EUR...
+      // row.name       - Нэр
+      // row.rate       - Ханш
+      // row.rate_float - Ханш
+      // row.last_date  - Мэдээний огноо
+      alert(row.code);
+  });
+}
+});</pre>
+        </div>
+        <div class="span6">
+          <h2>GET Параметерүүд</h2>
+          <table>
+            <thead>
+              <tr>
+                <th>Параметр</th>
+                <th>Тайлбар</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>currency</code></td>
+                <td> Харах ханшууд. Валютын 3 үсэгтэй кодуудыг | ээс тусгаарлан илгээх. <br/>
+                  Жишээ : <code>currency=USD|EUR|JPY|GBP|RUB|CNY|KRW</code>
+                </td>
+              </tr>
+              <tr>
+                <td><code>currency_rate_title</code></td>
+                <td>  Ханш багнын гарчиг солих. </td>
+              </tr>
+              <tr>
+                <td><code>currency_title</code></td>
+                <td>  Валют багнын гарчиг солих.  </td>
+              </tr>
+              <tr>
+                <td><code>source</code></td>
+                <td>  Эх сурвалж текстийг солих </td>
+              </tr>
+              <tr>
+                <td><code>conv_tool</code></td>
+                <td> Ханш хөрвүүлэх түүл гарна </td>
+              </tr>
+              <tr>
+                <td><code>myorder</code></td>
+                <td> Ханш харагдах дараалалыг currency parameter -ээс авна </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span8">
+          <h3>IFrame ээр</h3>
+            <pre class="prettyprint lang-html">&lt;iframe
+      style=&quot;width:180px;font-size:11px;height:210px;border: none;overflow:hidden;margin:0;&quot; 
+      src=&quot;http://monxansh.appspot.com/xansh.html?currency=USD|EUR|JPY|GBP|RUB|CNY|KRW&quot;&gt;&lt;/iframe&gt;
+          </pre>
+        </div>
+        <div class="span4">
+          <iframe style="width:180px;font-size:11px;height:210px;border: none;overflow:hidden;margin:0;" src="http://monxansh.appspot.com/xansh.html?currency=USD|EUR|JPY|GBP|RUB|CNY|KRW"></iframe>
+        </div>
+      </div>
+      <div class="row">
+
+        <div class="span8">
+          <h2>Ханш хөрвүүлэгчтэй гаргах</h2>
+            <p>Жаахан том зай хэрэгтэй.</p>
+            <pre class="prettyprint lang-html">&lt;iframe
+      style=&quot;width:210px;font-size:11px;height:280px;border: none;overflow:hidden;margin:0;&quot; 
+      src=&quot;http://monxansh.appspot.com/xansh.html?currency=USD|EUR|JPY|GBP|RUB|CNY|KRW&amp;conv_tool=1&quot;&gt;&lt;/iframe&gt;
+          </pre>
+        </div>
+        <div class="span4">
+          <iframe style="width:210px;font-size:11px;height:280px;border: none;overflow:hidden;margin:0;" src="http://monxansh.appspot.com/xansh.html?currency=USD|EUR|JPY|GBP|RUB|CNY|KRW&conv_tool=1"></iframe>
+        </div>
+      </div>
+      <div class="row">
+
+        <div class="span8">
+          <h2>Олон хэл</h2>
+            <pre class="prettyprint lang-html">&lt;iframe
+              style=&quot;width:180px;font-size:11px;height:210px;border: none;overflow:hidden;margin:0;&quot; 
+      src=&quot;http://monxansh.appspot.com/xansh.html?currency=USD|EUR|JPY|GBP|RUB|CNY|KRW&amp;currency_title=Currency&amp;currency_rate_title=Rate&amp;source=Source&quot;&gt;&lt;/iframe&gt;</pre>
+        </div>
+        <div class="span4">
+          <iframe style="width:180px;font-size:11px;height:210px;border: none;overflow:hidden;margin:0;" src="http://monxansh.appspot.com/xansh.html?currency=USD|EUR|JPY|GBP|RUB|CNY|KRW&currency_title=Currency&currency_rate_title=Rate&source=Source"></iframe>
+        </div>
+      </div>
+    
+    <hr>
+
+    </div> <!-- /container -->
+
+<!-- Le javascript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"> </script>
+<script src="http://twitter.github.com/bootstrap/assets/js/bootstrap.min.js"></script>
+<script src="http://connect.facebook.net/en_US/all.js#appId=225646060820419&xfbml=1"></script>
+<script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script>
+<script src="http://google-code-prettify.googlecode.com/svn/trunk/src/prettify.js" type="text/javascript"></script>
 <script type="text/javascript">
-
   var _gaq = _gaq || [];
   _gaq.push(['_setAccount', 'UA-1019855-8']);
   _gaq.push(['_trackPageview']);
-
   (function() {
     var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
     ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
     var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
   })();
-
 </script>
 <!-- Place this render call where appropriate -->
 <script type="text/javascript">
@@ -35,79 +181,6 @@
     var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
   })();
 </script>
-<style>
-	.plus_one_div{
-		float:left; 
-	}
-	.facebook_div{
-		display:block;
-		width: 300px;
-		float:left;
-		margin: 0px auto;
-		
-	}
-	.twitter_div{
-		float:left;
-	}
-	.clear{
-		clear:both;
-	}
-</style>
-</head>
-<body>
-<h1>Монгол банкны ханш татагч</h1>
-<div class="plus_one_div">
-	<g:plusone href="http://monxansh.appspot.com"  size="tall" width="300" annotation="inline"></g:plusone>
-</div>
-<div class="facebook_div">
-	<div id="fb-root"></div>
-	<script src="http://connect.facebook.net/en_US/all.js#appId=225646060820419&amp;xfbml=1"></script>
-	<fb:like href="http://monxansh.appspot.com/" send="true" width="300" show_faces="true" action="like" font=""></fb:like>
-</div>
-<div class="twitter_div">
-	<a href="http://twitter.com/share" class="twitter-share-button" data-url="http://monxansh.appspot.com" data-count="horizontal">Tweet</a><script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script>
-</div>
-<div class="clear"></div>
-	<h2>JSON format for jQuery</h2>
-	<pre>jQuery.ajax({
-		url : 'http://monxansh.appspot.com/xansh.json?currency=USD|EUR', 
-		data_type: 'json',
-		success : function(data) {
-			jQuery.each(data, function(row) {
-				// Format 
-				// row.code 	- Код USD, EUR...
-				// row.name 	- Нэр
-				// row.rate 	- Ханш
-				// row.last_date- Мэдээний огноо
-				alert(row.code)
-			});
-		}
-	});</pre>
-	<h2>IFrame</h2>
-	<pre>&lt;iframe
-style=&quot;width:180px;font-size:11px;height:210px;border: none;overflow:hidden;margin:0;&quot; 
-src=&quot;http://monxansh.appspot.com/xansh.html?currency=USD|EUR|JPY|GBP|RUB|CNY|KRW&quot;&gt;&lt;/iframe&gt;
-	</pre>
-	<iframe style="width:180px;font-size:11px;height:210px;border: none;overflow:hidden;margin:0;" src="http://monxansh.appspot.com/xansh.html?currency=USD|EUR|JPY|GBP|RUB|CNY|KRW"></iframe>
-	<h2>Параметерүүд</h2>
-	<p> 
-		<b>currency</b> - Харах ханшууд. Валютын 3 үсэгтэй кодуудыг | ээс тусгаарлан илгээх. <br/>
-		<b>currency_rate_title</b> - Ханш багнын гарчиг солих. <br/>
-		<b>currency_title</b> - Валют багнын гарчиг солих. <br/>
-		<b>source</b> - Эх сурвалж текстийг солих. <br/>
-		<b>conv_tool</b>  - Ханш хөрвүүлэх түүл гарна. <br/>
-		<b>myorder</b>  - Ханш харагдах дараалалыг currency parameter -ээс авна. <br/>
-	</p>
 
-	<h2>Олон хэл</h2>
-	<pre>&lt;iframe
-	style=&quot;width:180px;font-size:11px;height:210px;border: none;overflow:hidden;margin:0;&quot; 
-	src=&quot;http://monxansh.appspot.com/xansh.html?currency=USD|EUR|JPY|GBP|RUB|CNY|KRW&amp;currency_title=Currency&amp;currency_rate_title=Rate&amp;source=Source&quot;&gt;&lt;/iframe&gt;
-		</pre>
-<iframe
-	style="width:180px;font-size:11px;height:210px;border: none;overflow:hidden;margin:0;" 
-	src="http://monxansh.appspot.com/xansh.html?currency=USD|EUR|JPY|GBP|RUB|CNY|KRW&currency_title=Currency&currency_rate_title=Rate&source=Source"></iframe>
-	
-</body>
+  </body>
 </html>
-
