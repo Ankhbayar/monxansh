@@ -60,7 +60,7 @@
   url : 'http://monxansh.appspot.com/xansh.json?currency=USD|EUR', 
   data_type: 'json',
   success : function(data) {
-    jQuery.each(data, function(row) {
+    jQuery.each(data, function(index, row) {
       // Format 
       // row.code       - Код USD, EUR...
       // row.name       - Нэр
