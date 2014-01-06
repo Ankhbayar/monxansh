@@ -128,6 +128,8 @@ class HanshHandler(webapp2.RequestHandler):
         
         # Thanks. http://stackoverflow.com/questions/477816/the-right-json-content-type
         self.response.headers['Content-Type'] = 'application/json;charset=utf-8'
+        # Ref: http://www.w3.org/TR/access-control/
+        self.response.headers['Access-Control-Allow-Origin'] = '*'
         ret_list = []
 
         if filter_currency:
