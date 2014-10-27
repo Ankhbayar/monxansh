@@ -14,11 +14,11 @@ REGX_PATTERN = u"<tr>\\s*<td.*>.*</td>\\s*<td.*>(?P<name>.*)</td>\\s*<td.*><span
 
 def open_url_data(url):
 	from google.appengine.api import urlfetch
-	result = urlfetch.fetch(CURRENCY_RATE_URL, deadline = 30, 
+	result = urlfetch.fetch(CURRENCY_RATE_URL, deadline = 30,
 							headers = { 'Cache-Control': 'no-cache,max-age=0', 'Pragma': 'no-cache' } )
 	return result.content
-	
-	
+
+
 def get_data():
 	html_text = open_url_data(CURRENCY_RATE_URL)
 	if html_text is not None:
