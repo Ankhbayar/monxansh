@@ -222,6 +222,10 @@ class Robots(webapp2.RequestHandler):
         self.response.out.write(u"User-agent: *\n")
         self.response.out.write(u"Allow:/")
 
+    def head(self):
+        # Accept HEAD request for bot friendly
+        self.get()
+
 
 class SitemapXML(webapp2.RequestHandler):
     def get(self):
@@ -245,6 +249,10 @@ class SitemapXML(webapp2.RequestHandler):
    </url>
 </urlset>
 """)
+
+    def head(self):
+        # Accept HEAD request for bot friendly
+        self.get()
 
 
 def conv_unicode(var):
