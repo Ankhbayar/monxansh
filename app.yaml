@@ -4,13 +4,6 @@ runtime: python27
 api_version: 1
 threadsafe: true
 
-# builtins:
-# - datastore_admin: on
-# - remote_api: on
-
-# Cache static files
-default_expiration: "14d"
-
 handlers:
 - url: /img
   static_dir: media
