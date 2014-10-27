@@ -1,15 +1,16 @@
 # coding:utf-8
-""" Монгол банкы ханш татагч
-    author: @ankhaatk
+"""
+    Монгол банкны ханш татагч
+    Author: @Ankhbayar
 """
 import os
-import webapp2
 import json
+import webapp2
 import traceback
 from mongolbank import get_data, CURRENCY_RATE_URL
-from google.appengine.ext.webapp import template
 from google.appengine.api import memcache
 from google.appengine.ext import db
+from google.appengine.ext.webapp import template
 
 
 _DEBUG = False
@@ -23,17 +24,17 @@ catch_key_ordered = "xansh_list_order"
 
 class Xansh(db.Model):
     """ Xansh Model """
-    code = db.StringProperty(verbose_name = u"Код", required=True)
-    name = db.StringProperty(verbose_name = u"Нэр")
+    code = db.StringProperty(verbose_name=u"Код", required=True)
+    name = db.StringProperty(verbose_name=u"Нэр")
     # Тооцоолол хийхгүй
-    rate = db.StringProperty(verbose_name = u"Ханш", required=True)
-    rate_float = db.FloatProperty(verbose_name = u"Ханш", required=False)
+    rate = db.StringProperty(verbose_name=u"Ханш", required=True)
+    rate_float = db.FloatProperty(verbose_name=u"Ханш", required=False)
 
     # Сүүлд хадгалсан огноо
     updated = db.DateTimeProperty(auto_now=True)
 
     # Эрэмбэ
-    erembe = db.IntegerProperty(verbose_name = u"Эрэмбэ", required=True)
+    erembe = db.IntegerProperty(verbose_name=u"Эрэмбэ", required=True)
 
     @staticmethod
     def save_rate(code, name, rate, erembe):
@@ -70,7 +71,8 @@ class Xansh(db.Model):
                 "last_date": xansh.updated.strftime("%Y-%m-%d %H:%M:%S")
             }
             big_dic.append(row)
-        memcache.add(key=catch_key_ordered, value=big_dic, time=local_catch_time)
+        memcache.add(key=catch_key_ordered, value=big_dic,
+                     time=local_catch_time)
         return big_dic
 
     @staticmethod
@@ -103,7 +105,8 @@ class BaseRequestHandler(webapp2.RequestHandler):
         values = {}
         values.update(template_values)
         directory = os.path.dirname(__file__)
-        path = os.path.join(directory, os.path.join("templates", template_name))
+        path = os.path.join(directory,
+                            os.path.join("templates", template_name))
         self.response.out.write(template.render(path, values, debug=_DEBUG))
 
 
@@ -112,10 +115,9 @@ class HanshHandler(webapp2.RequestHandler):
         filter_currency = self.request.get("currency", False)
         myorder = self.request.get("myorder", False)
 
-        # Thanks. http://stackoverflow.com/questions/477816/the-right-json-content-type
-        self.response.headers["Content-Type"] = 'application/json;charset=utf-8'
+        self.response.headers["Content-Type"] = "application/json;charset=utf-8"
         # Ref: http://www.w3.org/TR/access-control/
-        self.response.headers["Access-Control-Allow-Origin"] = '*'
+        self.response.headers["Access-Control-Allow-Origin"] = "*"
         ret_list = []
 
         if filter_currency:
@@ -146,7 +148,7 @@ class IndexHandler(BaseRequestHandler):
 
     def get(self):
         try:
-            self.generate("index.html" )
+            self.generate("index.html")
         except:
             self.response.out.write(traceback.format_exc())
 
@@ -179,7 +181,7 @@ class HanshHTMLHandler(BaseRequestHandler):
         source_link = CURRENCY_RATE_URL
         self.generate("hansh.html", {
             "hansh_list": ret_list,
-            "source_link":source_link,
+            "source_link": source_link,
             "currency_title": self.request.get("currency_title", u"Валют"),
             "currency_rate_title": self.request.get("currency_rate_title", u"Албан ханш"),
             "source": self.request.get("source", u"Эх сурвалж"),
@@ -202,7 +204,7 @@ class UpdateRateHandler(webapp2.RequestHandler):
                                     name=conv_unicode(row.get("name")),
                                     rate=row.get("rate"),
                                     erembe=count)
-                    self.response.out.write(u"%d.%s Ханш хадгалав\n" %(count, code))
+                    self.response.out.write(u"%d.%s Ханш хадгалав\n" % (count, code))
 
             self.response.out.write(u"Амжилттай\n")
             # Clear catch
