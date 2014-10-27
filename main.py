@@ -28,7 +28,7 @@ class Xansh(db.Model):
     name = db.StringProperty(verbose_name=u"Нэр")
     # Тооцоолол хийхгүй
     rate = db.StringProperty(verbose_name=u"Ханш", required=True)
-    rate_float = db.FloatProperty(verbose_name=u"Ханш", required=False)
+    rate_float = db.FloatProperty(verbose_name=u"Ханш")
 
     # Сүүлд хадгалсан огноо
     updated = db.DateTimeProperty(auto_now=True)
