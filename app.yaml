@@ -14,11 +14,11 @@ default_expiration: "14d"
 handlers:
 - url: /img
   static_dir: media
-  expiration: '14d'
+  expiration: "14d"
 
 - url: /favicon\.ico
   static_files: media/favicon.ico
-  expiration: '14d'
+  expiration: "14d"
   upload: media/favicon\.ico
 
 - url: /.*
