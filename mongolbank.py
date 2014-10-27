@@ -1,11 +1,8 @@
 # coding: utf-8
 """
-    Монгол банкы ханш татагч
-    author : @ankhaatk
+    Монгол банкны ханш татагч
+    Author : @Ankhbayar
 """
-
-__author__ = "L.Ankhbayar"
-
 
 import re
 
