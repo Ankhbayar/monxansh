@@ -6,9 +6,9 @@
 
 import re
 
-CURRENCY_RATE_URL = "http://www.mongolbank.mn/listexchange.aspx?did=2"
+CURRENCY_RATE_URL = "http://www.mongolbank.mn/dblistofficialdailyrate.aspx"
 # Thanks. @ubs121
-REGX_PATTERN = u"<tr>\\s*<td.*>.*</td>\\s*<td.*>(?P<name>.*)</td>\\s*<td.*><span id=\"MainContent_lbl(?P<code>\\w{3})\">(?P<rate>.*)</span></td></tr>"
+REGX_PATTERN = u"<tr>\\s*<td.*>.*</td>\\s*<td.*>(?P<name>.*)</td>\\s*<td.*><span id=\"ContentPlaceHolder1_lbl(?P<code>\\w{3})\">(?P<rate>.*)</span></td></tr>"
 
 
 def open_url_data(url):
