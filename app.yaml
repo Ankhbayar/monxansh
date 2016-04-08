@@ -5,14 +5,13 @@ api_version: 1
 threadsafe: true
 
 handlers:
+- url: /(favicon\.ico|robots\.txt|sitemap.xml)
+  static_files: static/\1
+  upload: static/.*
+
 - url: /img
   static_dir: media
   expiration: "14d"
-
-- url: /favicon\.ico
-  static_files: media/favicon.ico
-  expiration: "14d"
-  upload: media/favicon\.ico
 
 - url: /.*
   script: main.app
