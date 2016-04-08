@@ -216,45 +216,6 @@ class UpdateRateHandler(webapp2.RequestHandler):
             self.response.out.write(traceback.format_exc())
 
 
-class Robots(webapp2.RequestHandler):
-    def get(self):
-        self.response.headers["Content-Type"] = "text/plain"
-        self.response.out.write(u"User-agent: *\n")
-        self.response.out.write(u"Allow:/")
-
-    def head(self):
-        # Accept HEAD request for bot friendly
-        self.get()
-
-
-class SitemapXML(webapp2.RequestHandler):
-    def get(self):
-        self.response.headers["Content-Type"] = "text/xml"
-        self.response.out.write(u"""<?xml version="1.0" encoding="UTF-8"?>
-   <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-   <url>
-      <loc>http://monxansh.appspot.com/</loc>
-   </url>
-   <url>
-      <loc>http://monxansh.appspot.com/xansh.html</loc>
-      <changefreq>always</changefreq>
-   </url>
-   <url>
-      <loc>http://monxansh.appspot.com/xansh.json</loc>
-      <changefreq>always</changefreq>
-   </url>
-   <url>
-      <loc>http://monxansh.appspot.com/xansh.html?currency=USD|EUR|JPY|GBP|RUB|CNY|KRW</loc>
-      <changefreq>always</changefreq>
-   </url>
-</urlset>
-""")
-
-    def head(self):
-        # Accept HEAD request for bot friendly
-        self.get()
-
-
 def conv_unicode(var):
     if isinstance(var, str):
         var = unicode(var, "utf-8")
@@ -268,6 +229,4 @@ app = webapp2.WSGIApplication([
     ("/xansh.json", HanshHandler),
     ("/xansh.html", HanshHTMLHandler),
     ("/update.html", UpdateRateHandler),
-    ("/robots.txt", Robots),
-    ("/sitemap.xml", SitemapXML),
 ], debug=True)
