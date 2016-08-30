@@ -17,7 +17,6 @@ _DEBUG = False
 
 
 # For local catch
-local_catch_time = 3600  # 1 hour
 catch_key = "xansh_list_no_order"
 catch_key_ordered = "xansh_list_order"
 
@@ -72,7 +71,7 @@ class Xansh(db.Model):
             }
             big_dic.append(row)
         memcache.add(key=catch_key_ordered, value=big_dic,
-                     time=local_catch_time)
+                     time=3600)
         return big_dic
 
     @staticmethod
@@ -90,7 +89,7 @@ class Xansh(db.Model):
                 "rate_float": xansh.rate_float,
                 "last_date": xansh.updated.strftime("%Y-%m-%d %H:%M:%S")
             }
-        memcache.add(key=catch_key, value=big_dic, time=local_catch_time)
+        memcache.add(key=catch_key, value=big_dic, time=3600)
         return big_dic
 
 
