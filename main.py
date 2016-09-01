@@ -7,7 +7,7 @@ import os
 import json
 import webapp2
 import traceback
-from mongolbank import get_data, CURRENCY_RATE_URL
+import mongolbank
 from google.appengine.api import memcache
 from google.appengine.ext import db
 from google.appengine.ext.webapp import template
@@ -178,10 +178,9 @@ class HanshHTMLHandler(BaseRequestHandler):
         else:
             ret_list = Xansh.get_all_to_dic_order()
 
-        source_link = CURRENCY_RATE_URL
         self.generate("hansh.html", {
             "hansh_list": ret_list,
-            "source_link": source_link,
+            "source_link": mongolbank.CURRENCY_RATE_URL,
             "currency_title": self.request.get("currency_title", u"Валют"),
             "currency_rate_title": self.request.get("currency_rate_title", u"Албан ханш"),
             "source": self.request.get("source", u"Эх сурвалж"),
@@ -194,17 +193,18 @@ class UpdateRateHandler(webapp2.RequestHandler):
         self.response.headers["Content-Type"] = "text/plain;charset=utf-8"
 
         try:
-            count = 0
-            hansh_list = get_data()
-            for row in hansh_list:
-                count += 1
+            for count, row in enumerate(mongolbank.get_data(), start=1):
                 code = row.get("code")
-                if code is not None:
-                    Xansh.save_rate(code=code,
-                                    name=conv_unicode(row.get("name")),
-                                    rate=row.get("rate"),
-                                    erembe=count)
-                    self.response.out.write(u"%d.%s Ханш хадгалав\n" % (count, code))
+
+                # Skip
+                if code is None:
+                    continue
+
+                Xansh.save_rate(code=code,
+                                name=conv_unicode(row.get("name")),
+                                rate=row.get("rate"),
+                                erembe=count)
+                self.response.out.write(u"%d.%s Ханш хадгалав\n" % (count, code))
 
             self.response.out.write(u"Амжилттай\n")
             # Clear catch
