@@ -13,9 +13,6 @@ from google.appengine.ext import db
 from google.appengine.ext.webapp import template
 
 
-_DEBUG = False
-
-
 # For local catch
 local_catch_time = 3600  # 1 hour
 catch_key = "xansh_list_no_order"
@@ -132,7 +129,7 @@ class IndexHandler(webapp2.RequestHandler):
 
     def get(self):
         try:
-            self.response.out.write(template.render("templates/index.html", {}, debug=_DEBUG))
+            self.response.out.write(template.render("templates/index.html", {}, debug=False))
         except:
             self.response.out.write(traceback.format_exc())
 
@@ -170,7 +167,7 @@ class HanshHTMLHandler(webapp2.RequestHandler):
             "source": self.request.get("source", u"Эх сурвалж"),
             "use_conv_tool": self.request.get("conv_tool", False),
         }
-        self.response.out.write(template.render("templates/hansh.html", context, debug=_DEBUG))
+        self.response.out.write(template.render("templates/hansh.html", context, debug=False))
 
 
 class UpdateRateHandler(webapp2.RequestHandler):
