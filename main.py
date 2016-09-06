@@ -94,22 +94,6 @@ class Xansh(db.Model):
         return big_dic
 
 
-class BaseRequestHandler(webapp2.RequestHandler):
-    """Supplies a common template generation function.
-
-    When you call generate(), we augment the template variables supplied with
-    the current user in the 'user' variable and the current webapp request
-    in the 'request' variable.
-    """
-    def generate(self, template_name, template_values={}):
-        values = {}
-        values.update(template_values)
-        directory = os.path.dirname(__file__)
-        path = os.path.join(directory,
-                            os.path.join("templates", template_name))
-        self.response.out.write(template.render(path, values, debug=_DEBUG))
-
-
 class HanshHandler(webapp2.RequestHandler):
     def get(self):
         filter_currency = self.request.get("currency", False)
@@ -142,18 +126,18 @@ class HanshHandler(webapp2.RequestHandler):
         self.response.out.write(json.dumps(ret_list))
 
 
-class IndexHandler(BaseRequestHandler):
+class IndexHandler(webapp2.RequestHandler):
     def post(self):
         return self.get()
 
     def get(self):
         try:
-            self.generate("index.html")
+            self.response.out.write(template.render("templates/index.html", {}, debug=_DEBUG))
         except:
             self.response.out.write(traceback.format_exc())
 
 
-class HanshHTMLHandler(BaseRequestHandler):
+class HanshHTMLHandler(webapp2.RequestHandler):
     def get(self):
         filter_currency = self.request.get("currency", False)
         myorder = self.request.get("myorder", False)
@@ -178,14 +162,15 @@ class HanshHTMLHandler(BaseRequestHandler):
         else:
             ret_list = Xansh.get_all_to_dic_order()
 
-        self.generate("hansh.html", {
+        context = {
             "hansh_list": ret_list,
             "source_link": mongolbank.CURRENCY_RATE_URL,
             "currency_title": self.request.get("currency_title", u"Валют"),
             "currency_rate_title": self.request.get("currency_rate_title", u"Албан ханш"),
             "source": self.request.get("source", u"Эх сурвалж"),
             "use_conv_tool": self.request.get("conv_tool", False),
-        })
+        }
+        self.response.out.write(template.render("templates/hansh.html", context, debug=_DEBUG))
 
 
 class UpdateRateHandler(webapp2.RequestHandler):
