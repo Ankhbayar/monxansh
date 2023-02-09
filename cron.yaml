@@ -1,4 +1,4 @@
 cron:
 - url: /update.html
-  description: Parse and update from mongolbank.mn
+  description: Parse and update from old.mongolbank.mn
   schedule: every 1 hours from 16:00 to 22:00

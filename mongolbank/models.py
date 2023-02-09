@@ -37,7 +37,7 @@ class Xansh(db.Model):
             xansh.rate_float = float(cleaned_rate)
         except:
             # Алдаа их гардаг
-            print traceback.format_exc()
+            print(traceback.format_exc())
             xansh.rate_float = 0
         xansh.rate = rate
         xansh.erembe = erembe
@@ -60,8 +60,7 @@ class Xansh(db.Model):
                 "last_date": xansh.updated.strftime("%Y-%m-%d %H:%M:%S")
             }
             big_dic.append(row)
-        memcache.add(key=catch_key_ordered, value=big_dic,
-                     time=local_catch_time)
+        memcache.add(key=catch_key_ordered, value=big_dic, time=local_catch_time)
         return big_dic
 
     @staticmethod
