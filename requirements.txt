@@ -2,3 +2,4 @@ flask
 flask-cors
 appengine-python-standard>=1.0.0
 gunicorn
+flask_cachecontrol

@@ -9,6 +9,8 @@ from flask import request
 from flask import Flask
 from flask import render_template
 from flask_cors import CORS, cross_origin
+from flask_cachecontrol import cache
+from flask_cachecontrol import dont_cache
 from google.appengine.api import wrap_wsgi_app
 from google.appengine.api import memcache
 
@@ -18,6 +20,7 @@ from mongolbank.models import catch_key
 from mongolbank.crawler import CURRENCY_RATE_URL
 from mongolbank.crawler import get_data
 
+HTTP_MAX_AGE = 2 * 3600  # 2 цаг
 
 app = Flask(__name__)
 app.wsgi_app = wrap_wsgi_app(app.wsgi_app)
@@ -27,6 +30,7 @@ cors = CORS(app)
 
 @app.route("/xansh.json",  methods=['GET', 'POST'])
 @cross_origin()
+@cache(max_age=HTTP_MAX_AGE, public=True)
 def xansh_json_handler():
     filter_currency = request.args.get("currency", False)
     myorder = request.args.get("myorder", False)
@@ -55,11 +59,13 @@ def xansh_json_handler():
     return ret_list
 
 @app.route("/",  methods=['GET', ])
+@cache(max_age=HTTP_MAX_AGE, public=True)
 def index_handler():
     return render_template("index.html", )
 
 @app.route("/xansh.html",  methods=['GET', "POST" ])
 @cross_origin()
+@cache(max_age=HTTP_MAX_AGE, public=True)
 def xansh_html_handler():
     filter_currency = request.args.get("currency", False)
     myorder = request.args.get("myorder", False)
@@ -95,6 +101,7 @@ def xansh_html_handler():
     return render_template("hansh.html", **context)
 
 @app.route("/update.html", methods=['GET', "POST" ])
+@dont_cache()
 def update_handler():
     lines = []
     try:
