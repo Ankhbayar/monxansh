@@ -17,20 +17,21 @@ from google.appengine.api import memcache
 from mongolbank.models import Xansh
 from mongolbank.models import catch_key_ordered
 from mongolbank.models import catch_key
-from mongolbank.crawler import CURRENCY_RATE_URL
-from mongolbank.crawler import get_data
+from mongolbank.crawler import SOURCE_LINK
+from mongolbank.crawler import get_data_old
+from mongolbank.crawler import download_from_mongolbank
 
 HTTP_MAX_AGE = 2 * 3600  # 2 цаг
 
 app = Flask(__name__)
 app.wsgi_app = wrap_wsgi_app(app.wsgi_app)
-cors = CORS(app)
+cors = CORS(app, resources={r"/*": {"origins": "*"}})
 
 
 
 @app.route("/xansh.json",  methods=['GET', 'POST'])
+@dont_cache()
 @cross_origin()
-@cache(max_age=HTTP_MAX_AGE, public=True)
 def xansh_json_handler():
     filter_currency = request.args.get("currency", False)
     myorder = request.args.get("myorder", False)
@@ -64,8 +65,8 @@ def index_handler():
     return render_template("index.html", )
 
 @app.route("/xansh.html",  methods=['GET', "POST" ])
+@dont_cache()
 @cross_origin()
-@cache(max_age=HTTP_MAX_AGE, public=True)
 def xansh_html_handler():
     filter_currency = request.args.get("currency", False)
     myorder = request.args.get("myorder", False)
@@ -92,7 +93,7 @@ def xansh_html_handler():
 
     context = {
         "hansh_list": ret_list,
-        "source_link": CURRENCY_RATE_URL,
+        "source_link": SOURCE_LINK,
         "currency_title": request.args.get("currency_title", "Валют"),
         "currency_rate_title": request.args.get("currency_rate_title", "Албан ханш"),
         "source": request.args.get("source", "Эх сурвалж"),
@@ -100,30 +101,57 @@ def xansh_html_handler():
     }
     return render_template("hansh.html", **context)
 
-@app.route("/update.html", methods=['GET', "POST" ])
+@app.route("/update_old.html", methods=['GET', "POST" ])
 @dont_cache()
 def update_handler():
     lines = []
-    try:
-        for count, row in enumerate(get_data(), start=1):
-            code = row.get("code")
+    data_lst = get_data_old()
+    # app.logger.info("data_lst %s" % data_lst)
 
-            # Skip
-            if code is None:
-                continue
+    for count, row in enumerate(data_lst, start=1):
+        code = row.get("code")
 
-            Xansh.save_rate(code=code,
-                            name=row.get("name"),
-                            rate=row.get("rate"),
-                            erembe=count)
-            lines.append("%d.%s Ханш хадгалав\n" % (count, code))
+        # Skip
+        if code is None:
+            continue
 
-        lines.append("Амжилттай\n")
-        # Clear catch
-        memcache.delete(catch_key)
-        memcache.delete(catch_key_ordered)
-        lines.append("Cache cleared")
-    except Exception as e:
-        lines.append("Татаж чадсангүй\n")
-        lines.append(traceback.format_exc())
+        Xansh.save_rate(code=code,
+                        name=row.get("name"),
+                        rate=row.get("rate"),
+                        erembe=count)
+        lines.append("%d.%s Ханш хадгалав\n" % (count, code))
+
+    lines.append("Амжилттай\n")
+    # Clear catch
+    memcache.delete(catch_key)
+    memcache.delete(catch_key_ordered)
+    lines.append("Cache cleared")
+    return lines
+
+
+@app.route("/update.html", methods=['GET', "POST" ])
+@dont_cache()
+def update_new_handler():
+    lines = []
+    datas = download_from_mongolbank()
+    for count, row in enumerate(datas, start=0):
+        code = row.get("code")
+
+        # Skip
+        if code is None:
+            continue
+
+        Xansh.save_rate(code=code,
+                        name=row.get("name"),
+                        rate=row.get("rate"),
+                        rate_date=row.get("rate_date"),
+                        erembe=count)
+        lines.append("%d.%s Ханш хадгалав\n" % (count, code))
+
+    lines.append("Амжилттай\n")
+    # Clear catch
+    memcache.delete(catch_key)
+    memcache.delete(catch_key_ordered)
+    lines.append("Cache cleared")
+
     return lines

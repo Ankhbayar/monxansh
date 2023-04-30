@@ -13,20 +13,21 @@ catch_key_ordered = "xansh_list_order"
 
 class Xansh(db.Model):
     """ Xansh Model """
-    code = db.StringProperty(verbose_name=u"Код", required=True)
-    name = db.StringProperty(verbose_name=u"Нэр")
+    code = db.StringProperty(verbose_name="Код", required=True)
+    name = db.StringProperty(verbose_name="Нэр")
     # Тооцоолол хийхгүй
-    rate = db.StringProperty(verbose_name=u"Ханш", required=True)
-    rate_float = db.FloatProperty(verbose_name=u"Ханш")
+    rate = db.StringProperty(verbose_name="Ханш", required=True)
+    rate_float = db.FloatProperty(verbose_name="Ханш")
+    rate_date = db.StringProperty(verbose_name="Огноо")
 
     # Сүүлд хадгалсан огноо
     updated = db.DateTimeProperty(auto_now=True)
 
     # Эрэмбэ
-    erembe = db.IntegerProperty(verbose_name=u"Эрэмбэ", required=True)
+    erembe = db.IntegerProperty(verbose_name="Эрэмбэ", required=True)
 
     @staticmethod
-    def save_rate(code, name, rate, erembe):
+    def save_rate(code, name, rate, erembe, rate_date=None):
         xansh = Xansh.all().filter("code = ", code).get()
         if xansh is None:
             xansh = Xansh(code=code, rate=rate, erembe=erembe)
@@ -40,6 +41,7 @@ class Xansh(db.Model):
             print(traceback.format_exc())
             xansh.rate_float = 0
         xansh.rate = rate
+        xansh.rate_date = rate_date
         xansh.erembe = erembe
 
         xansh.put()
@@ -56,6 +58,7 @@ class Xansh(db.Model):
                 "code": xansh.code,
                 "name": xansh.name,
                 "rate": xansh.rate,
+                "rate_date": xansh.rate_date,
                 "rate_float": xansh.rate_float,
                 "last_date": xansh.updated.strftime("%Y-%m-%d %H:%M:%S")
             }
@@ -75,6 +78,7 @@ class Xansh(db.Model):
                 "code": xansh.code,
                 "name": xansh.name,
                 "rate": xansh.rate,
+                "rate_date": xansh.rate_date,
                 "rate_float": xansh.rate_float,
                 "last_date": xansh.updated.strftime("%Y-%m-%d %H:%M:%S")
             }

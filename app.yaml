@@ -3,7 +3,7 @@
 runtime: python310
 service: default
 instance_class: F1
-entrypoint: gunicorn -b :$PORT main:app
+entrypoint: gunicorn main:app -b :$PORT
 app_engine_apis: true
 
 automatic_scaling:

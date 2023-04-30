@@ -58,7 +58,7 @@
   {% for row in hansh_list %}
     <tr bgcolor="#ffffff" >
       <td alt="{{row.name}}" class="xansh"><span id="{{row.code}}">{{row.code}}</span></td>
-      <td align=right width=50%>{{row.rate}}</td>
+      <td align=right width=50% alt="{{row.rate_date}}">{{row.rate}}</td>
     </tr>
   {% endfor %}
   </tbody><tfoot><tr><td>{{source|escape}} :</td><td align="right"><a href="{{source_link}}" target="_blank"><strong>» Монгол банк</strong></a></td></tr><!--
